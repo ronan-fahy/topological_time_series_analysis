@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 
+# ****************************************************
 # Create takens embedding
 #
 # S:    time-series in dictionary form
 # d:    dimension of embedding
 # tau:  delay, how far back in the time-series to look
-#
+# ****************************************************
 def Takens(S, d, tau):
    
     if d < 1:
