@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import math, csv
+import math, csv, collections
 
 # Read CSV file into 1-dimensional time-series
 #
@@ -14,7 +14,9 @@ def csv_to_time_series(filepath, n):
         for row in reader:
             t, y = row
             # divide by 6 to get times in units of 6 minutes
-            Y[int(int(t)/6)] = float(y)
+            #Y[int(int(t)/6)] = float(y)
+            Y[int(t)] = float(y)
+    Y = collections.OrderedDict(sorted(Y.items()))
     Y = {k: Y[k] for k in list(Y)[:n]}
     return Y
 
@@ -28,7 +30,8 @@ def threshold(h, Y):
 # Create clusters
 #
 # times:    
-# epsilon:  
+# epsilon: 
+# clusters:
 def create_clusters(times, epsilon):
     clusters = [[]]
     prev_t = times[0]
@@ -46,6 +49,7 @@ def create_clusters(times, epsilon):
 # Calculate averages
 #
 # clusters: 
+# averages:
 def calculate_averages(clusters):
     averages = []
     for cluster in clusters:
@@ -57,7 +61,8 @@ def calculate_averages(clusters):
 
 # Calculate differences
 #
-# averages: 
+# averages:
+# differences: 
 def calculate_differences(averages):
     differences = []
     prev_average = averages[0]
@@ -84,8 +89,10 @@ def Takens(S, d, tau):
             temp = []
             for j in range(0, d):
                 try:
-                    idx = int(round(t-((j*tau)/d)))
-                    temp = [S.get(idx)] + temp
+                    #idx = int(round(t-((j*tau)/d)))
+                    #temp = [S.get(idx)] + temp
+                    idx = t-((j*tau)/d)
+                    temp = [S[idx] if idx in S else S[min(S.keys(), key = lambda k: abs(k-idx))]] + temp
                     mean_time = mean_time + idx
                 except TypeError:
                     print("d and tau must be integers greater than one")
@@ -140,3 +147,9 @@ def Neighbourhood(T, v, d, epsilon):
         if EuclideanMetric(v, w) < epsilon:
             x[t] = w
     return x
+
+def t(Y):
+    return Y.keys()
+
+def m(Y):
+    return Y.values()
