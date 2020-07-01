@@ -2,8 +2,9 @@
 
 from topological_time_series_analysis import *
 import collections
+import sys
 
-filePath = "sea_level_data_complete.csv"
+filePath = sys.argv[1]
 n        = 5000
 d        = 50
 tau      = 20

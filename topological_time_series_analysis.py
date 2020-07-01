@@ -13,9 +13,8 @@ def csv_to_time_series(filepath, n):
         Y = {}
         for row in reader:
             t, y = row
-            # divide by 6 to get times in units of 6 minutes
-            #Y[int(int(t)/6)] = float(y)
-            Y[int(t)] = float(y)
+            if t and y:
+                Y[int(t)] = float(y)
     Y = collections.OrderedDict(sorted(Y.items()))
     Y = {k: Y[k] for k in list(Y)[:n]}
     return Y
@@ -34,7 +33,7 @@ def threshold(h, Y):
 # clusters:
 def create_clusters(times, epsilon):
     clusters = [[]]
-    prev_t = times[0]
+    prev_t = list(times)[0]
     cluster_idx = 0
     clusters[cluster_idx] = []
     for t in times:
